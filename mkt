@@ -1,0 +1,82 @@
+#!/usr/bin/env bash
+
+set -e
+
+# export ANNOUNCE_PTP='http://please.passthepopcorn.me:2710/YOUR_PASSKEY/announce'
+# export ANNOUNCE_BTN='http://landof.tv/YOUR_PASSKEY/announce'
+# export ANNOUNCE_HDB='http://tracker.hdbits.org/announce.php?passkey=YOUR_PASSKEY'
+
+self="${0##*/}"
+
+check_deps() {
+  for cmd in "$@"; do
+    command -v "$cmd" >/dev/null 2>&1 || {
+      echo "ERROR: $cmd not found." >&2
+      exit 1
+    }
+  done
+}
+
+check_deps mktorrent
+
+get_trackers() {
+  tracker_list=()
+  while read -r var; do
+    tracker_list+=("${var#ANNOUNCE_}")
+  done < <(compgen -v | grep '^ANNOUNCE_')
+}
+
+if [[ $# -lt 1 || $# -eq 1 ]]; then
+  echo "ERROR: Missing argument." >&2
+  echo "Usage: $self [tracker] [file 1] [file 2] .."
+  exit 1
+fi
+
+get_trackers
+tracker="$(printf '%s' "$1" | tr '[:lower:]' '[:upper:]')"
+
+if [[ $tracker = "$(compgen -W "${tracker_list[*]}" "$tracker" | head -1)" ]] ; then
+  announce=$(eval printf -- "'%s'" "\$ANNOUNCE_$tracker")
+  shift
+else
+  printf 'Error: $ANNOUNCE_%s is not set\n' "$tracker" >&2
+  exit 1
+fi
+
+if [[ $tracker = "HDB" ]]; then
+  tracker="HDBits"
+elif [[ $tracker = "TL" ]]; then
+  tracker="TorrentLeech.org"
+elif [[ $tracker = "ACM" ]]; then
+  tracker="AsianCinema"
+elif [[ $tracker = "RF" ]]; then
+  tracker="ReelFliX"
+fi
+
+for file in "$@"; do
+  if [[ -f $file ]]; then
+    torrentname="${file##*/}"
+    torrentname="${torrentname%.*}"
+    filesize=$(stat -c%s "$file")
+    if (( filesize > 16384000000 )); then  # 16GB
+      n=24
+    elif (( filesize > 8192000000 )); then # 8GB
+      n=23
+    elif (( filesize > 4096000000 )); then # 4GB
+      n=22
+    elif (( filesize > 2048000000 )); then # 2GB
+      n=21
+    elif (( filesize > 1024000000 )); then # 1GB
+      n=20
+    elif (( filesize > 512000000 )); then  # 512MB
+      n=19
+    else
+      n=18
+    fi
+    printf 'Creating torrent for -> %s\nSelected piece size -> 2^%s\n' "$torrentname" $n
+    mktorrent -p -a "$announce" -s "$tracker" -o "$torrentname.torrent" "$file" &&
+      printf 'Done!\n'
+  else
+    printf 'Error: %s doesn'\''t exist\n' "$file" >&2
+  fi
+done
