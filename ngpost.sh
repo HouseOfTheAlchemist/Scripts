@@ -10,10 +10,28 @@ function _install() {
         echo "ngpost is already installed."
         exit 0
     fi
-	# Installing dependencies
-	echo "Installing dependencies"
-	sudo apt-get install -y build-essential libssl-dev qt5-default qt5-qmake
-
+    # Installing dependencies
+    echo "Installing dependencies"
+    if command -v apt >/dev/null 2>&1; then
+      if [[ "$(lsb_release -rs)" == "22.04" ]]; then
+            sudo apt install -y build-essential libssl-dev qtbase5-dev qt5-qmake
+        else
+            sudo apt-get update
+            sudo apt-get install -y build-essential libssl-dev qt5-default qt5-qmake
+        fi
+    elif command -v yum >/dev/null 2>&1; then
+       sudo yum update
+       sudo yum install -y gcc-c++ make openssl-devel qt5-qtbase-devel qt5-qmake
+    elif command -v dnf >/dev/null 2>&1; then
+       sudo dnf update
+       sudo dnf install -y gcc-c++ make openssl-devel qt5-qtbase-devel qt5-qmake
+    elif command -v pacman >/dev/null 2>&1; then
+       sudo pacman -Syu --needed base-devel openssl qt5-base qt5-tools
+    else
+       echo "Unable to install dependencies: package manager not found."
+       exit 1
+    fi
+	
     # Get dir structure ready
     echo "Starting ngPost installation"
     echo "Establishing directory structure"
