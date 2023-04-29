@@ -10,6 +10,10 @@ function _install() {
         echo "ngpost is already installed."
         exit 0
     fi
+	# Installing dependencies
+	echo "Installing dependencies"
+	sudo apt-get install -y build-essentials libssl-dev qt5-default qt5-qmake
+
     # Get dir structure ready
     echo "Starting ngPost installation"
     echo "Establishing directory structure"
@@ -83,7 +87,7 @@ function _remove() {
     echo "ngPost has been removed successfully!"
 }
 
-echo "Proceeding with installation"
+echo "Proceeding with installation
 echo "Welcome to The ngpost installer..."
 echo ""
 echo "What do you like to do?"
