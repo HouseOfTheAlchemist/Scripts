@@ -87,7 +87,7 @@ function _remove() {
     echo "ngPost has been removed successfully!"
 }
 
-echo "Proceeding with installation
+echo "Proceeding with installation"
 echo "Welcome to The ngpost installer..."
 echo ""
 echo "What do you like to do?"
