@@ -84,8 +84,6 @@ function _remove() {
 }
 
 echo "Proceeding with installation"
-fi
-
 echo "Welcome to The ngpost installer..."
 echo ""
 echo "What do you like to do?"
