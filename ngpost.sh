@@ -12,7 +12,7 @@ function _install() {
     fi
 	# Installing dependencies
 	echo "Installing dependencies"
-	sudo apt-get install -y build-essentials libssl-dev qt5-default qt5-qmake
+	sudo apt-get install -y build-essential libssl-dev qt5-default qt5-qmake
 
     # Get dir structure ready
     echo "Starting ngPost installation"
