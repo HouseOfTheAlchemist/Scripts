@@ -1,9 +1,9 @@
 A small repo with set of scripts to make your life easier.
 
-# gclone Installation
+# Script Installation
 
 ```
-curl -sL https://raw.githubusercontent.com/HouseOfTheAlchemist/Scripts/master/gclone.sh > rclone++ && bash rclone++
+bash <(curl -sL "https://github.com/HouseOfTheAlchemist/Scripts/raw/master/scriptname.sh")
 ```
 # mkt Usage Guide
 
