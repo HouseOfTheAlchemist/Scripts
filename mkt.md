@@ -9,7 +9,7 @@ A simple wrapper script for [mktorrent](https://github.com/pobrn/mktorrent), a c
 Make sure you have mktorrent installed. Then, copy or download the mkt script to your preferred location:
 
 ```
-sudo curl https://github.com/HouseOfTheAlchemist/Scripts/blob/master/mkt -o /usr/local/bin
+sudo curl https://raw.githubusercontent.com/HouseOfTheAlchemist/Scripts/master/mkt -o /usr/local/bin/mkt
 ```
 
 Make it executable with the following command:
